@@ -64,7 +64,15 @@ func (h *UserHandler) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetUserResponse{User: &pb.User{Id: strconv.Itoa(int(user.ID)), Name: user.Name, Email: user.Email}}, nil
+
+	userID := strconv.Itoa(int(user.ID))
+	return &pb.GetUserResponse{
+		User: &pb.User{
+			Id:    userID,
+			Name:  user.Name,
+			Email: user.Email,
+		},
+	}, nil
 }
 
 func (h *UserHandler) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {

@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/models"
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/repositories"
 	"github.com/go-redis/redis/v8"
@@ -87,6 +88,7 @@ func (us *UserService) DeleteUser(userID string) error {
 
 func (us *UserService) GetAllUsers() ([]*models.User, error) {
 	cachedUsers, err := us.cache.Get(context.Background(), "all_users").Result()
+	fmt.Println(cachedUsers)
 	if err == nil {
 		var users []*models.User
 		err := json.Unmarshal([]byte(cachedUsers), &users)
@@ -120,6 +122,7 @@ func (us *UserService) GetAllUsers() ([]*models.User, error) {
 
 func (us *UserService) GetUserByID(userID string) (*models.User, error) {
 	cachedUser, err := us.cache.Get(context.Background(), "user:"+userID).Result()
+	fmt.Println(cachedUser)
 	if err == nil {
 		var user models.User
 		err := json.Unmarshal([]byte(cachedUser), &user)
