@@ -22,7 +22,7 @@ func (h *PostHandler) CreatePost(ctx context.Context, req *pb.CreatePostRequest)
 	post := &models.Post{
 		Title:    req.Title,
 		Content:  req.Content,
-		AuthorID: uint(req.AuthorId),
+		AuthorID: req.AuthorId,
 	}
 
 	err := h.postService.CreatePost(post)
@@ -32,10 +32,9 @@ func (h *PostHandler) CreatePost(ctx context.Context, req *pb.CreatePostRequest)
 
 	return &pb.CreatePostResponse{
 		Post: &pb.Post{
-			Id:       strconv.Itoa(int(post.ID)),
 			Title:    post.Title,
 			Content:  post.Content,
-			AuthorId: int32(post.AuthorID),
+			AuthorId: post.AuthorID,
 		},
 	}, nil
 }
@@ -53,10 +52,10 @@ func (h *PostHandler) GetPost(ctx context.Context, req *pb.GetPostRequest) (*pb.
 
 	return &pb.GetPostResponse{
 		Post: &pb.Post{
-			Id:       strconv.Itoa(int(post.ID)),
+			Id:       string(post.ID),
 			Title:    post.Title,
 			Content:  post.Content,
-			AuthorId: int32(post.AuthorID),
+			AuthorId: post.AuthorID,
 		},
 	}, nil
 }
@@ -73,7 +72,7 @@ func (h *PostHandler) GetAllPosts(ctx context.Context, req *pb.GetAllPostsReques
 			Id:       strconv.Itoa(int(post.ID)),
 			Title:    post.Title,
 			Content:  post.Content,
-			AuthorId: int32(post.AuthorID),
+			AuthorId: post.AuthorID,
 		}
 		pbPosts = append(pbPosts, pbPost)
 	}
@@ -94,7 +93,7 @@ func (h *PostHandler) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest)
 
 	post.Title = req.Title
 	post.Content = req.Content
-	post.AuthorID = uint(req.AuthorId)
+	post.AuthorID = req.AuthorId
 
 	err = h.postService.UpdatePost(post)
 	if err != nil {
@@ -106,7 +105,7 @@ func (h *PostHandler) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest)
 			Id:       strconv.Itoa(int(post.ID)),
 			Title:    post.Title,
 			Content:  post.Content,
-			AuthorId: int32(post.AuthorID),
+			AuthorId: post.AuthorID,
 		},
 	}, nil
 }

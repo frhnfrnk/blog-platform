@@ -1,5 +1,13 @@
 github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240604140746-6d85c7c97eae h1:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240604140746-6d85c7c97eae/go.mod h1:OCQVUQC3OZA/R35JpoWgOLzLKV3yoaIWKioCNlofobA=
+github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605020013-0cab5ee930f4 h1:bD7+H4xvvS23B49W0DhOLOdRhiLLwbx2QqGgE5AAfQo=
+github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605020013-0cab5ee930f4/go.mod h1:OCQVUQC3OZA/R35JpoWgOLzLKV3yoaIWKioCNlofobA=
+github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605110021-42d5213fe951 h1:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605110021-42d5213fe951/go.mod h1:OCQVUQC3OZA/R35JpoWgOLzLKV3yoaIWKioCNlofobA=
+github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605105352-9f54c4ec40a9 h1:GfrT3K16j1Ip+1fYB7oKfziuCV2KjaDursh+YiK4FYU=
+github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605105352-9f54c4ec40a9/go.mod h1:KHvmW1j/7ieTdukF0feoIGfCi4Nl7Azxwvl22uvgsks=
+github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605110021-42d5213fe951 h1:y9rbR74XhWj6eS9Doc3fSDIm4zSRq/eizrEpGtGrlgc=
+github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605110021-42d5213fe951/go.mod h1:KHvmW1j/7ieTdukF0feoIGfCi4Nl7Azxwvl22uvgsks=
 github.com/frhnfrnk/blog-platform-microservices/user-service v0.0.0-20240604135757-f31d76dc502f h1:VT4Ql8w84NOTAmCo//+/bCEneownqCSW2GtxuUPI88c=
 github.com/frhnfrnk/blog-platform-microservices/user-service v0.0.0-20240604135757-f31d76dc502f/go.mod h1:Yy4JAZ9bcU/HEA+WkrsZrmL+jrsFgFQqVWaDa3ezvkM=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
@@ -8,6 +16,8 @@ github.com/graphql-go/graphql v0.8.1 h1:p7/Ou/WpmulocJeEx7wjQy611rtXGQaAcXGqanuM
 github.com/graphql-go/graphql v0.8.1/go.mod h1:nKiHzRM0qopJEwCITUuIsxk9PlVlwIiiI8pnJEhordQ=
 github.com/graphql-go/handler v0.2.4 h1:gz9q11TUHPNUpqzV8LMa+rkqM5NUuH/nkE3oF2LS3rI=
 github.com/graphql-go/handler v0.2.4/go.mod h1:gsQlb4gDvURR0bgN8vWQEh+s5vJALM2lYL3n3cf6OxQ=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 golang.org/x/net v0.25.0 h1:d/OCCoBEUq33pjydKrGQhw7IlUPI2Oylr+8qLx49kac=
 golang.org/x/net v0.25.0/go.mod h1:JkAGAh7GEvH74S6FOH42FLoXpXbE/aqXSrIQjXgsiwM=
 golang.org/x/sys v0.20.0 h1:Od9JTbYCk261bKm4M/mw7AklTlFYIa0bIp9BgSm1S8Y=

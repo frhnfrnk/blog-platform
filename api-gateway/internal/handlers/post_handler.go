@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/frhnfrnk/blog-platform-microservices/api-gateway/internal/graphql/post"
-	"github.com/frhnfrnk/blog-platform-microservices/api-gateway/internal/graphql/user"
 	"net/http"
 
 	"github.com/graphql-go/graphql"
@@ -19,8 +18,8 @@ func NewPostHandler(schema graphql.Schema) http.Handler {
 
 func PostHandler(resolver *post.Resolver) http.Handler {
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
-		Query:    user.NewRootQuery(resolver),
-		Mutation: user.NewRootMutation(resolver),
+		Query:    post.NewRootQuery(resolver),
+		Mutation: post.NewRootMutation(resolver),
 	})
 	if err != nil {
 		panic(err)

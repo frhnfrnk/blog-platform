@@ -2,7 +2,6 @@ package post
 
 import (
 	"context"
-
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/pb"
 	"github.com/graphql-go/graphql"
 )
@@ -43,11 +42,11 @@ func (r *Resolver) createPost(p graphql.ResolveParams) (interface{}, error) {
 	content, _ := p.Args["content"].(string)
 	authorID, _ := p.Args["authorID"].(string)
 
-	response, err := r.postServiceClient.CreatePost(context.Background(), &pb.CreatePostRequest{Title: title, Content: content, AuthorID: authorID})
+	response, err := r.postServiceClient.CreatePost(context.Background(), &pb.CreatePostRequest{Title: title, Content: content, AuthorId: authorID})
 	if err != nil {
 		return nil, err
 	}
-	return response.CreatedPost, nil
+	return response.Post, nil
 }
 
 func (r *Resolver) deletePost(p graphql.ResolveParams) (interface{}, error) {
@@ -69,5 +68,5 @@ func (r *Resolver) updatePost(p graphql.ResolveParams) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return response.UpdatedPost, nil
+	return response.Post, nil
 }
