@@ -6,6 +6,8 @@ import (
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/models"
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/repositories"
 	"github.com/go-redis/redis/v8"
+	"log"
+	"strconv"
 )
 
 type UserService struct {
@@ -21,15 +23,66 @@ func NewUserService(userRepo *repositories.UserRepository, cache *redis.Client) 
 }
 
 func (us *UserService) CreateUser(user *models.User) error {
-	return us.userRepo.CreateUser(user)
+	err := us.userRepo.CreateUser(user)
+	if err != nil {
+		return err
+	}
+
+	// Invalidate cache after creating user
+	err = us.cache.Del(context.Background(), "all_users").Err()
+	if err != nil {
+		return err
+	}
+
+	err = us.cache.Del(context.Background(), "user:"+strconv.Itoa(int(user.ID))).Err()
+	if err != nil {
+		// Handle error (optional)
+		log.Printf("Failed to invalidate cache for user:%d: %v", user.ID, err)
+	}
+
+	return nil
 }
 
 func (us *UserService) UpdateUser(user *models.User) error {
-	return us.userRepo.UpdateUser(user)
+	err := us.userRepo.UpdateUser(user)
+	if err != nil {
+		return err
+	}
+
+	// Invalidate cache after updating user
+	err = us.cache.Del(context.Background(), "all_users").Err()
+	if err != nil {
+		return err
+	}
+
+	err = us.cache.Del(context.Background(), "user:"+strconv.Itoa(int(user.ID))).Err()
+	if err != nil {
+		// Handle error (optional)
+		log.Printf("Failed to invalidate cache for user:%d: %v", user.ID, err)
+	}
+
+	return nil
 }
 
 func (us *UserService) DeleteUser(userID string) error {
-	return us.userRepo.DeleteUser(userID)
+	err := us.userRepo.DeleteUser(userID)
+	if err != nil {
+		return err
+	}
+
+	// Invalidate cache after deleting user
+	err = us.cache.Del(context.Background(), "all_users").Err()
+	if err != nil {
+		return err
+	}
+
+	err = us.cache.Del(context.Background(), "user:"+userID).Err()
+	if err != nil {
+		// Handle error (optional)
+		log.Printf("Failed to invalidate cache for user:%s: %v", userID, err)
+	}
+
+	return nil
 }
 
 func (us *UserService) GetAllUsers() ([]*models.User, error) {
