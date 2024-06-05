@@ -88,7 +88,10 @@ func (us *UserService) DeleteUser(userID string) error {
 
 func (us *UserService) GetAllUsers() ([]*models.User, error) {
 	cachedUsers, err := us.cache.Get(context.Background(), "all_users").Result()
+	fmt.Println("cachedUsers")
 	fmt.Println(cachedUsers)
+	fmt.Println("----------")
+
 	if err == nil {
 		var users []*models.User
 		err := json.Unmarshal([]byte(cachedUsers), &users)
@@ -112,9 +115,11 @@ func (us *UserService) GetAllUsers() ([]*models.User, error) {
 		return nil, err
 	}
 
+	fmt.Println(users)
+
 	var usersPtr []*models.User
-	for _, user := range users {
-		usersPtr = append(usersPtr, &user)
+	for _, u := range users {
+		usersPtr = append(usersPtr, &u)
 	}
 
 	return usersPtr, nil

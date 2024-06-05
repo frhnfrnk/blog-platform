@@ -1,14 +1,14 @@
-package graphql
+package handlers
 
 import (
+	"github.com/frhnfrnk/blog-platform-microservices/api-gateway/internal/graphql/user"
 	"net/http"
 
-	"github.com/frhnfrnk/blog-platform-microservices/api-gateway/graphql"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 )
 
-func NewGraphQLHandler(schema Schema) http.Handler {
+func NewUserHandler(schema graphql.Schema) http.Handler {
 	return handler.New(&handler.Config{
 		Schema:   &schema,
 		Pretty:   true,
@@ -16,12 +16,11 @@ func NewGraphQLHandler(schema Schema) http.Handler {
 	})
 }
 
-func GraphQLHandler(resolver *Resolver) http.Handler {
-	schemaConfig := graphql.SchemaConfig{
-		Query:    RootQuery,
-		Mutation: RootMutation,
-	}
-	schema, err := graphql.NewSchema(schemaConfig)
+func UserHandler(resolver *user.Resolver) http.Handler {
+	schema, err := graphql.NewSchema(graphql.SchemaConfig{
+		Query:    user.NewRootQuery(resolver),
+		Mutation: user.NewRootMutation(resolver),
+	})
 	if err != nil {
 		panic(err)
 	}
