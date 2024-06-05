@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-redis/redis/v8"
 	"github.com/joho/godotenv"
 	"log"
 	"net"
@@ -30,6 +31,8 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	grpcPort := os.Getenv("GRPC_PORT")
+	redisAddr := os.Getenv("REDIS_ADDR")
+	redisPassword := os.Getenv("REDIS_PASSWORD")
 
 	// Database connection
 	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPassword + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable"
@@ -43,9 +46,15 @@ func main() {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     redisAddr,
+		Password: redisPassword,
+		DB:       0, // Use default DB
+	})
+
 	// Setup repositories, services, and handlers
 	userRepo := repositories.NewUserRepository(db)
-	userService := services.NewUserService(userRepo)
+	userService := services.NewUserService(userRepo, redisClient)
 	userHandler := handlers.NewUserHandler(userService)
 
 	// Start gRPC server
