@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/models"
 	"strconv"
 
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/services"
@@ -15,6 +16,28 @@ type UserHandler struct {
 
 func NewUserHandler(userService *services.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
+}
+
+func (h *UserHandler) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+	// Create a new user model from the request
+	user := &models.User{
+		Name:  req.GetName(),
+		Email: req.GetEmail(),
+	}
+
+	// Call the UserService to create the user
+	if err := h.userService.CreateUser(user); err != nil {
+		return nil, err
+	}
+
+	// Return the created user in the response
+	return &pb.CreateUserResponse{
+		CreatedUser: &pb.User{
+			Id:    strconv.Itoa(int(user.ID)),
+			Name:  user.Name,
+			Email: user.Email,
+		},
+	}, nil
 }
 
 func (h *UserHandler) GetAllUser(context.Context, *pb.GetAllUserRequest) (*pb.GetAllUsersResponse, error) {
