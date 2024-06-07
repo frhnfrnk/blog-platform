@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	userPb "github.com/frhnfrnk/blog-platform-microservices/user-service/pb"
 	"strconv"
 	"time"
 
@@ -12,16 +14,26 @@ import (
 )
 
 type PostService struct {
-	postRepo *repositories.PostRepository
-	cache    *redis.Client
+	postRepo   *repositories.PostRepository
+	cache      *redis.Client
+	userClient userPb.UserServiceClient
 }
 
-func NewPostService(postRepo *repositories.PostRepository, cache *redis.Client) *PostService {
-	return &PostService{postRepo: postRepo, cache: cache}
+func NewPostService(postRepo *repositories.PostRepository, cache *redis.Client, userClient userPb.UserServiceClient) *PostService {
+	return &PostService{
+		postRepo:   postRepo,
+		cache:      cache,
+		userClient: userClient,
+	}
 }
 
 func (s *PostService) CreatePost(post *models.Post) error {
-	err := s.postRepo.CreatePost(post)
+	_, err := s.userClient.GetUser(context.Background(), &userPb.GetUserRequest{Id: post.AuthorID})
+	if err != nil {
+		return errors.New("user not found")
+	}
+
+	err = s.postRepo.CreatePost(post)
 	if err == nil {
 		s.cache.Del(context.Background(), "all_posts")
 	}
@@ -79,7 +91,12 @@ func (s *PostService) GetAllPosts() ([]models.Post, error) {
 }
 
 func (s *PostService) UpdatePost(post *models.Post) error {
-	err := s.postRepo.UpdatePost(post)
+	_, err := s.userClient.GetUser(context.Background(), &userPb.GetUserRequest{Id: post.AuthorID})
+	if err != nil {
+		return errors.New("user not found")
+	}
+
+	err = s.postRepo.UpdatePost(post)
 	if err == nil {
 		s.cache.Del(context.Background(), "post:"+strconv.Itoa(int(post.ID)))
 		s.cache.Del(context.Background(), "all_posts")
@@ -88,7 +105,13 @@ func (s *PostService) UpdatePost(post *models.Post) error {
 }
 
 func (s *PostService) DeletePost(id uint) error {
-	err := s.postRepo.DeletePost(id)
+
+	_, err := s.postRepo.GetPostByID(id)
+	if err != nil {
+		return errors.New("post not found")
+	}
+
+	err = s.postRepo.DeletePost(id)
 	if err == nil {
 		s.cache.Del(context.Background(), "post:"+strconv.Itoa(int(id)))
 		s.cache.Del(context.Background(), "all_posts")

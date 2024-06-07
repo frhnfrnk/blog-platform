@@ -6,9 +6,11 @@ import (
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/internal/repositories"
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/internal/services"
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/pb"
+	userPb "github.com/frhnfrnk/blog-platform-microservices/user-service/pb"
 	"github.com/go-redis/redis/v8"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -31,6 +33,7 @@ func main() {
 	grpcPort := os.Getenv("GRPC_PORT")
 	redisAddr := os.Getenv("REDIS_ADDR")
 	redisPassword := os.Getenv("REDIS_PASSWORD")
+	userServiceAddr := os.Getenv("USER_SERVICE_ADDR")
 
 	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPassword + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable"
 
@@ -49,8 +52,16 @@ func main() {
 		DB:       0, // Use default DB
 	})
 
+	// Connect to user-service
+	userConn, err := grpc.NewClient(userServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("Failed to connect to user service: %v", err)
+	}
+	defer userConn.Close()
+	userClient := userPb.NewUserServiceClient(userConn)
+
 	postRepo := repositories.NewPostRepository(db)
-	postService := services.NewPostService(postRepo, redisClient)
+	postService := services.NewPostService(postRepo, redisClient, userClient)
 	postHandler := handlers.NewPostHandler(postService)
 
 	lis, err := net.Listen("tcp", ":"+grpcPort)
