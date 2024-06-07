@@ -4,6 +4,8 @@ github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605020013-0cab5ee930
 github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605020013-0cab5ee930f4/go.mod h1:OCQVUQC3OZA/R35JpoWgOLzLKV3yoaIWKioCNlofobA=
 github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605110021-42d5213fe951 h1:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605110021-42d5213fe951/go.mod h1:OCQVUQC3OZA/R35JpoWgOLzLKV3yoaIWKioCNlofobA=
+github.com/frhnfrnk/blog-platform-microservices/comment-service v0.0.0-20240607115045-2fc7ef0d59b9 h1:Dx+F3JSMAZJSzL74RLWuC25zDo3KS19eC74ijNacZLY=
+github.com/frhnfrnk/blog-platform-microservices/comment-service v0.0.0-20240607115045-2fc7ef0d59b9/go.mod h1:INrHxl+JjCtUxxZxCxETnp+ngSU/0e6o1ko7RhQxL0g=
 github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605105352-9f54c4ec40a9 h1:GfrT3K16j1Ip+1fYB7oKfziuCV2KjaDursh+YiK4FYU=
 github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605105352-9f54c4ec40a9/go.mod h1:KHvmW1j/7ieTdukF0feoIGfCi4Nl7Azxwvl22uvgsks=
 github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605110021-42d5213fe951 h1:y9rbR74XhWj6eS9Doc3fSDIm4zSRq/eizrEpGtGrlgc=

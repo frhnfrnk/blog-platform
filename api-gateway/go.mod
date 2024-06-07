@@ -13,6 +13,7 @@ require (
 
 require (
 	github.com/frhnfrnk/blog-platform-microservices v0.0.0-20240605110021-42d5213fe951 // indirect
+	github.com/frhnfrnk/blog-platform-microservices/comment-service v0.0.0-20240607115045-2fc7ef0d59b9 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
