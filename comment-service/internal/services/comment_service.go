@@ -3,8 +3,10 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/frhnfrnk/blog-platform-microservices/comment-service/internal/models"
 	"github.com/frhnfrnk/blog-platform-microservices/comment-service/internal/repositories"
+	postPb "github.com/frhnfrnk/blog-platform-microservices/post-service/pb"
 	"github.com/go-redis/redis/v8"
 	"strconv"
 	"time"
@@ -13,14 +15,24 @@ import (
 type CommentService struct {
 	commentRepo *repositories.CommentRepository
 	cache       *redis.Client
+	postClient  postPb.PostServiceClient
 }
 
-func NewCommentService(commentRepo *repositories.CommentRepository, cache *redis.Client) *CommentService {
-	return &CommentService{commentRepo: commentRepo, cache: cache}
+func NewCommentService(commentRepo *repositories.CommentRepository, cache *redis.Client, postClient postPb.PostServiceClient) *CommentService {
+	return &CommentService{
+		commentRepo: commentRepo,
+		cache:       cache,
+		postClient:  postClient,
+	}
 }
 
 func (s *CommentService) CreateComment(comment *models.Comment) error {
-	err := s.commentRepo.CreateComment(comment)
+	_, err := s.postClient.GetPost(context.Background(), &postPb.GetPostRequest{Id: comment.PostID})
+	if err != nil {
+		return errors.New("post not found")
+	}
+
+	err = s.commentRepo.CreateComment(comment)
 	if err == nil {
 		s.cache.Del(context.Background(), "all_comments")
 	}
@@ -52,7 +64,12 @@ func (s *CommentService) GetCommentByID(id uint) (*models.Comment, error) {
 }
 
 func (s *CommentService) UpdateComment(comment *models.Comment) error {
-	err := s.commentRepo.UpdateComment(comment)
+	_, err := s.postClient.GetPost(context.Background(), &postPb.GetPostRequest{Id: comment.PostID})
+	if err != nil {
+		return errors.New("post not found")
+	}
+
+	err = s.commentRepo.UpdateComment(comment)
 	if err == nil {
 		s.cache.Del(context.Background(), "comment:"+strconv.Itoa(int(comment.ID)))
 		s.cache.Del(context.Background(), "all_comments")
