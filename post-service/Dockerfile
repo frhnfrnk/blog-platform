@@ -8,8 +8,8 @@ COPY internal/ internal/
 
 RUN go mod download
 
-RUN go build -o user-service ./cmd/main.go
+RUN go build -o post-service ./cmd/main.go
 
-EXPOSE 50051
+EXPOSE 50052
 
-CMD ["./user-service"]
+CMD ["./post-service"]

@@ -1,0 +1,76 @@
+version: "3"
+
+services:
+  user-service:
+    build: ./user-service
+    ports:
+      - "50051:50051"
+    networks:
+      - microservices_network
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: user_db
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: password
+
+  post-service:
+    build: ./post-service
+    ports:
+      - "50052:50052"
+    networks:
+      - microservices_network
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: post_db
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: password
+
+  comment-service:
+    build: ./comment-service
+    ports:
+      - "50053:50053"
+    networks:
+      - microservices_network
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: comment_db
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: password
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - microservices_network
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: user_db
+    networks:
+      - microservices_network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--requirepass", "password"]
+    networks:
+      - microservices_network
+
+networks:
+  microservices_network:
