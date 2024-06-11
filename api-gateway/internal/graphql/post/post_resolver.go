@@ -34,7 +34,7 @@ func (r *Resolver) resolvePostByID(params graphql.ResolveParams) (interface{}, e
 		return nil, err
 	}
 
-	return post, nil
+	return post.Post, nil
 }
 
 func (r *Resolver) createPost(p graphql.ResolveParams) (interface{}, error) {

@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/pb"
 	"github.com/graphql-go/graphql"
 )
@@ -34,8 +33,7 @@ func (r *Resolver) resolveUserByID(params graphql.ResolveParams) (interface{}, e
 	if err != nil {
 		return nil, err
 	}
-
-	return user, nil
+	return user.User, nil
 }
 
 func (r *Resolver) createUser(p graphql.ResolveParams) (interface{}, error) {

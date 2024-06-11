@@ -32,6 +32,7 @@ func (h *PostHandler) CreatePost(ctx context.Context, req *pb.CreatePostRequest)
 
 	return &pb.CreatePostResponse{
 		Post: &pb.Post{
+			Id:       strconv.Itoa(int(post.ID)),
 			Title:    post.Title,
 			Content:  post.Content,
 			AuthorId: post.AuthorID,
@@ -40,19 +41,15 @@ func (h *PostHandler) CreatePost(ctx context.Context, req *pb.CreatePostRequest)
 }
 
 func (h *PostHandler) GetPost(ctx context.Context, req *pb.GetPostRequest) (*pb.GetPostResponse, error) {
-	id, err := strconv.Atoi(req.Id)
+	post, err := h.postService.GetPostByID(req.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	post, err := h.postService.GetPostByID(uint(id))
-	if err != nil {
-		return nil, err
-	}
-
+	postId := strconv.Itoa(int(post.ID))
 	return &pb.GetPostResponse{
 		Post: &pb.Post{
-			Id:       string(post.ID),
+			Id:       postId,
 			Title:    post.Title,
 			Content:  post.Content,
 			AuthorId: post.AuthorID,
@@ -81,12 +78,8 @@ func (h *PostHandler) GetAllPosts(ctx context.Context, req *pb.GetAllPostsReques
 }
 
 func (h *PostHandler) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest) (*pb.UpdatePostResponse, error) {
-	id, err := strconv.Atoi(req.Id)
-	if err != nil {
-		return nil, err
-	}
 
-	post, err := h.postService.GetPostByID(uint(id))
+	post, err := h.postService.GetPostByID(req.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -111,12 +104,7 @@ func (h *PostHandler) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest)
 }
 
 func (h *PostHandler) DeletePost(ctx context.Context, req *pb.DeletePostRequest) (*pb.DeletePostResponse, error) {
-	id, err := strconv.Atoi(req.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	err = h.postService.DeletePost(uint(id))
+	err := h.postService.DeletePost(req.Id)
 	if err != nil {
 		return nil, err
 	}

@@ -40,9 +40,9 @@ func (s *PostService) CreatePost(post *models.Post) error {
 	return err
 }
 
-func (s *PostService) GetPostByID(id uint) (*models.Post, error) {
+func (s *PostService) GetPostByID(id string) (*models.Post, error) {
 	ctx := context.Background()
-	cacheKey := "post:" + strconv.Itoa(int(id))
+	cacheKey := "post:" + id
 	cachedPost, err := s.cache.Get(ctx, cacheKey).Result()
 	if err == nil {
 		var post models.Post
@@ -104,7 +104,7 @@ func (s *PostService) UpdatePost(post *models.Post) error {
 	return err
 }
 
-func (s *PostService) DeletePost(id uint) error {
+func (s *PostService) DeletePost(id string) error {
 
 	_, err := s.postRepo.GetPostByID(id)
 	if err != nil {
@@ -113,7 +113,7 @@ func (s *PostService) DeletePost(id uint) error {
 
 	err = s.postRepo.DeletePost(id)
 	if err == nil {
-		s.cache.Del(context.Background(), "post:"+strconv.Itoa(int(id)))
+		s.cache.Del(context.Background(), "post:"+id)
 		s.cache.Del(context.Background(), "all_posts")
 	}
 	return err

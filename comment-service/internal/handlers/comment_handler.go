@@ -66,12 +66,7 @@ func (h *CommentHandler) UpdateComment(ctx context.Context, req *pb.UpdateCommen
 }
 
 func (h *CommentHandler) DeleteComment(ctx context.Context, req *pb.DeleteCommentRequest) (*pb.DeleteCommentResponse, error) {
-	id, err := strconv.Atoi(req.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	err = h.commentService.DeleteComment(uint(id))
+	err := h.commentService.DeleteComment(req.Id)
 	if err != nil {
 		return nil, err
 	}

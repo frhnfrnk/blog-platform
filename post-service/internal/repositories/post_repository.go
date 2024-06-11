@@ -17,7 +17,7 @@ func (r *PostRepository) CreatePost(post *models.Post) error {
 	return r.db.Create(post).Error
 }
 
-func (r *PostRepository) GetPostByID(id uint) (*models.Post, error) {
+func (r *PostRepository) GetPostByID(id string) (*models.Post, error) {
 	var post models.Post
 	if err := r.db.First(&post, id).Error; err != nil {
 		return nil, err
@@ -37,6 +37,6 @@ func (r *PostRepository) UpdatePost(post *models.Post) error {
 	return r.db.Save(post).Error
 }
 
-func (r *PostRepository) DeletePost(id uint) error {
+func (r *PostRepository) DeletePost(id string) error {
 	return r.db.Delete(&models.Post{}, id).Error
 }

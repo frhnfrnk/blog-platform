@@ -50,7 +50,7 @@ func (s *CommentService) GetCommentByID(id uint) (*models.Comment, error) {
 			return &comment, nil
 		}
 	}
-	comment, err := s.commentRepo.GetCommentByID(id)
+	comment, err := s.commentRepo.GetCommentByID(strconv.Itoa(int(id)))
 	if err != nil {
 		return nil, err
 	}
@@ -77,10 +77,10 @@ func (s *CommentService) UpdateComment(comment *models.Comment) error {
 	return err
 }
 
-func (s *CommentService) DeleteComment(id uint) error {
+func (s *CommentService) DeleteComment(id string) error {
 	err := s.commentRepo.DeleteComment(id)
 	if err == nil {
-		s.cache.Del(context.Background(), "comment:"+strconv.Itoa(int(id)))
+		s.cache.Del(context.Background(), "comment:"+id)
 		s.cache.Del(context.Background(), "all_comments")
 	}
 	return err

@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/models"
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/repositories"
 	"github.com/go-redis/redis/v8"
@@ -33,12 +32,6 @@ func (us *UserService) CreateUser(user *models.User) error {
 	err = us.cache.Del(context.Background(), "all_users").Err()
 	if err != nil {
 		return err
-	}
-
-	err = us.cache.Del(context.Background(), "user:"+strconv.Itoa(int(user.ID))).Err()
-	if err != nil {
-		// Handle error (optional)
-		log.Printf("Failed to invalidate cache for user:%d: %v", user.ID, err)
 	}
 
 	return nil
@@ -88,10 +81,6 @@ func (us *UserService) DeleteUser(userID string) error {
 
 func (us *UserService) GetAllUsers() ([]*models.User, error) {
 	cachedUsers, err := us.cache.Get(context.Background(), "all_users").Result()
-	fmt.Println("cachedUsers")
-	fmt.Println(cachedUsers)
-	fmt.Println("----------")
-
 	if err == nil {
 		var users []*models.User
 		err := json.Unmarshal([]byte(cachedUsers), &users)
@@ -115,11 +104,9 @@ func (us *UserService) GetAllUsers() ([]*models.User, error) {
 		return nil, err
 	}
 
-	fmt.Println(users)
-
 	var usersPtr []*models.User
-	for _, u := range users {
-		usersPtr = append(usersPtr, &u)
+	for i := range users {
+		usersPtr = append(usersPtr, &users[i])
 	}
 
 	return usersPtr, nil
@@ -127,7 +114,6 @@ func (us *UserService) GetAllUsers() ([]*models.User, error) {
 
 func (us *UserService) GetUserByID(userID string) (*models.User, error) {
 	cachedUser, err := us.cache.Get(context.Background(), "user:"+userID).Result()
-	fmt.Println(cachedUser)
 	if err == nil {
 		var user models.User
 		err := json.Unmarshal([]byte(cachedUser), &user)
@@ -146,6 +132,7 @@ func (us *UserService) GetUserByID(userID string) (*models.User, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	err = us.cache.Set(context.Background(), "user:"+userID, userJSON, 0).Err()
 	if err != nil {
 		return nil, err

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"github.com/frhnfrnk/blog-platform-microservices/user-service/internal/models"
 	"strconv"
 
@@ -20,18 +19,15 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 }
 
 func (h *UserHandler) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
-	// Create a new user model from the request
 	user := &models.User{
 		Name:  req.GetName(),
 		Email: req.GetEmail(),
 	}
 
-	// Call the UserService to create the user
 	if err := h.userService.CreateUser(user); err != nil {
 		return nil, err
 	}
 
-	// Return the created user in the response
 	return &pb.CreateUserResponse{
 		CreatedUser: &pb.User{
 			Id:    strconv.Itoa(int(user.ID)),
@@ -47,15 +43,8 @@ func (h *UserHandler) GetAllUser(context.Context, *pb.GetAllUserRequest) (*pb.Ge
 		return nil, err
 	}
 
-	fmt.Println("users in handlers")
-	fmt.Println(users)
-	fmt.Println("------------")
-
 	var pbUsers []*pb.User
 	for _, user := range users {
-		fmt.Println("user-per-per")
-		fmt.Println(user)
-		fmt.Println("------------")
 		pbUser := &pb.User{
 			Id:    strconv.Itoa(int(user.ID)),
 			Name:  user.Name,
