@@ -1,6 +1,6 @@
 module github.com/frhnfrnk/blog-platform-microservices/api-gateway
 
-go 1.21.4
+go 1.20
 
 require (
 	github.com/frhnfrnk/blog-platform-microservices/post-service v0.0.0-20240605110021-42d5213fe951

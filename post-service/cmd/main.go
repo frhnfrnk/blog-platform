@@ -1,6 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"net"
+	"os"
+
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/internal/handlers"
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/internal/models"
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/internal/repositories"
@@ -13,9 +18,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"net"
-	"os"
 )
 
 func main() {
@@ -35,8 +37,9 @@ func main() {
 	redisPassword := os.Getenv("REDIS_PASSWORD")
 	userServiceAddr := os.Getenv("USER_SERVICE_ADDR")
 
-	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPassword + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable"
 
+	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPassword + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable"
+	fmt.Println(dsn)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)

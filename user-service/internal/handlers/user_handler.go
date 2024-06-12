@@ -62,7 +62,7 @@ func (h *UserHandler) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 		return nil, err
 	}
 
-	userID := strconv.Itoa(int(user.ID))
+		userID := strconv.Itoa(int(user.ID))
 	return &pb.GetUserResponse{
 		User: &pb.User{
 			Id:    userID,

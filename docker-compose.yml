@@ -1,76 +1,82 @@
-version: "3"
+version: "3.8"
 
 services:
-  user-service:
-    build: ./user-service
-    ports:
-      - "50051:50051"
-    networks:
-      - microservices_network
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: user_db
-      REDIS_ADDR: redis:6379
-      REDIS_PASSWORD: password
-
-  post-service:
-    build: ./post-service
-    ports:
-      - "50052:50052"
-    networks:
-      - microservices_network
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: post_db
-      REDIS_ADDR: redis:6379
-      REDIS_PASSWORD: password
-
-  comment-service:
-    build: ./comment-service
-    ports:
-      - "50053:50053"
-    networks:
-      - microservices_network
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: comment_db
-      REDIS_ADDR: redis:6379
-      REDIS_PASSWORD: password
-
   api-gateway:
-    build: ./api-gateway
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    env_file: ./api-gateway/.env
     ports:
       - "8080:8080"
-    networks:
-      - microservices_network
+    depends_on:
+      - user-service
+      - post-service
+      - comment-service
 
-  postgres:
-    image: postgres:latest
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    env_file: ./user-service/.env
+    ports:
+      - "50051:50051"
+    depends_on:
+      - postgres-user
+
+  post-service:
+    build:
+      context: ./post-service
+      dockerfile: Dockerfile
+    env_file: ./post-service/.env
+    ports:
+      - "50052:50052"
+    depends_on:
+      - postgres-post
+
+  comment-service:
+    build:
+      context: ./comment-service
+      dockerfile: Dockerfile
+    env_file: ./comment-service/.env
+    ports:
+      - "50053:50053"
+    depends_on:
+      - postgres-comment
+
+  postgres-user:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: lemontea
+      POSTGRES_DB: blog_user_service
+    volumes:
+      - user_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  postgres-post:
+    image: postgres:13
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: user_db
-    networks:
-      - microservices_network
-
-  redis:
-    image: redis:latest
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: lemontea
+      POSTGRES_DB: blog_post_service
+    volumes:
+      - post_data:/var/lib/postgresql/data
     ports:
-      - "6379:6379"
-    command: ["redis-server", "--requirepass", "password"]
-    networks:
-      - microservices_network
+      - "5433:5433"
 
-networks:
-  microservices_network:
+  postgres-comment:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: lemontea
+      POSTGRES_DB: blog_comment_service
+    volumes:
+      - comment_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5434"
+
+volumes:
+  user_data:
+  post_data:
+  comment_data:

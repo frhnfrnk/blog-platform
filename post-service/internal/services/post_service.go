@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	userPb "github.com/frhnfrnk/blog-platform-microservices/user-service/pb"
 	"strconv"
 	"time"
+
+	userPb "github.com/frhnfrnk/blog-platform-microservices/user-service/pb"
 
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/internal/models"
 	"github.com/frhnfrnk/blog-platform-microservices/post-service/internal/repositories"
@@ -14,16 +15,16 @@ import (
 )
 
 type PostService struct {
-	postRepo   *repositories.PostRepository
-	cache      *redis.Client
-	userClient userPb.UserServiceClient
+	postRepo      *repositories.PostRepository
+	cache         *redis.Client
+	userClient    userPb.UserServiceClient
 }
 
 func NewPostService(postRepo *repositories.PostRepository, cache *redis.Client, userClient userPb.UserServiceClient) *PostService {
 	return &PostService{
-		postRepo:   postRepo,
-		cache:      cache,
-		userClient: userClient,
+		postRepo:      postRepo,
+		cache:         cache,
+		userClient:    userClient,
 	}
 }
 
@@ -36,7 +37,10 @@ func (s *PostService) CreatePost(post *models.Post) error {
 	err = s.postRepo.CreatePost(post)
 	if err == nil {
 		s.cache.Del(context.Background(), "all_posts")
+	} else {
+		return err
 	}
+
 	return err
 }
 
